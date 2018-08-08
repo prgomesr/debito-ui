@@ -1,0 +1,34 @@
+<div class="ui-g">
+
+  <div class="ui-g-12">
+    <h1>Lançamentos</h1>
+  </div>
+
+  <div class="ui-g-12">
+    <p-table [value]="lancamentos">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Cliente</th>
+          <th style="width: 100px">Valor</th>
+          <th style="width: 120px">Vencimento</th>
+          <th style="width: 120px">Pagamento</th>
+          <th style="width: 130px">Situação</th>
+          <th style="width: 80px">Lote</th>
+          <th style="width: 80px"></th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-d>
+        <tr>
+          <td>{{d.cliente}}</td>
+          <td>{{d.valor}}</td>
+          <td>{{d.vencimento}}</td>
+          <td>{{d.pagamento}}</td>
+          <td>{{d.situacao}}</td>
+          <td>{{d.lote}}</td>
+          <td></td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+</div>
