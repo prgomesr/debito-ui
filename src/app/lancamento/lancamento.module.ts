@@ -1,13 +1,15 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
 import {SharedModule} from '../shared/shared.module';
+import {LancamentoRoutingModule} from './lancamento-routing.module';
 import {LancamentoComponent} from './lancamento.component';
 
 @NgModule({
   imports: [
     CommonModule,
-    SharedModule
+    SharedModule,
+    LancamentoRoutingModule
   ],
-  declarations: []
+  declarations: [LancamentoComponent]
 })
 export class LancamentoModule { }
