@@ -4,6 +4,8 @@ import {SharedModule} from '../shared/shared.module';
 import {LancamentoRoutingModule} from './lancamento-routing.module';
 import {LancamentoComponent} from './lancamento.component';
 import {LancamentoService} from './lancamento.service';
+import {ClienteService} from '../cliente/cliente.service';
+import {ContaService} from '../conta/conta.service';
 
 @NgModule({
   imports: [
@@ -12,6 +14,6 @@ import {LancamentoService} from './lancamento.service';
     LancamentoRoutingModule
   ],
   declarations: [LancamentoComponent],
-  providers: [LancamentoService]
+  providers: [LancamentoService, ClienteService, ContaService]
 })
 export class LancamentoModule { }

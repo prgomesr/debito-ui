@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {LancamentoService} from './lancamento.service';
 import {Lancamento} from '../core/models/model';
+import {ContaService} from '../conta/conta.service';
+import {ClienteService} from '../cliente/cliente.service';
 
 @Component({
   selector: 'app-lancamento',
@@ -14,10 +16,23 @@ export class LancamentoComponent implements OnInit {
   contas = [];
   clientes = [];
   dialog = false;
-  constructor(private service: LancamentoService) { }
+  constructor(private service: LancamentoService,
+              private contaService: ContaService,
+              private clienteService: ClienteService) { }
 
   ngOnInit() {
     this.listar();
+    this.listarContas();
+    this.listarClientes();
+  }
+
+  private listarClientes() {
+    this.clienteService.list().subscribe(dados => this.clientes = dados
+      .map(d => ({label: d.nome, value: d.id})));
+  }
+
+  private listarContas() {
+    this.contaService.list().subscribe(dados => this.contas = dados);
   }
 
   private listar() {
