@@ -15,3 +15,15 @@ label {
     margin: 0 auto;
   }
 }
+
+tr > td {
+ text-align: center;
+}
+
+tr > th {
+ text-align: center;
+}
+
+.notextcenter {
+ text-align: left;
+}

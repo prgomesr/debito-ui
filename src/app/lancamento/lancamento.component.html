@@ -5,11 +5,17 @@
   </div>
 
   <div class="ui-g-12">
-    <p-table [value]="lancamentos">
+    <a href="javascript:;" style="text-decoration: none"
+    pTooltip="Novo lançamento individual" tooltipPosition="right"
+    (click)="open()"><i class="fa fa-plus"></i> Novo</a>
+    <a href="javascript:;" style="text-decoration: none; margin-left: .50em"
+    pTooltip="Novo baseado em anterior" tooltipPosition="right"><i class="fa fa-plus"></i> Novo em lote</a>
+    <p-table [value]="lancamentos" [paginator]="true" [rows]="5" [responsive]="true">
       <ng-template pTemplate="header">
         <tr>
-          <th>Cliente</th>
+          <th class="notextcenter">Cliente</th>
           <th style="width: 100px">Valor</th>
+          <th style="width: 100px">Valor Pago</th>
           <th style="width: 120px">Vencimento</th>
           <th style="width: 120px">Pagamento</th>
           <th style="width: 130px">Situação</th>
@@ -19,16 +25,75 @@
       </ng-template>
       <ng-template pTemplate="body" let-d>
         <tr>
-          <td>{{d.cliente}}</td>
-          <td>{{d.valor}}</td>
-          <td>{{d.vencimento}}</td>
-          <td>{{d.pagamento}}</td>
-          <td>{{d.situacao}}</td>
+          <td class="notextcenter">{{d.cliente.nome}}</td>
+          <td style="color: blue">{{d.valor | number:'1.2-2'}}</td>
+          <td style="color: blue">{{d.valorPago | number:'1.2-2'}}</td>
+          <td>{{d.vencimento | date: 'dd/MM/yyyy'}}</td>
+          <td>{{d.pagamento | date: 'dd/MM/yyyy'}}</td>
+          <td>
+            <span class="badge"
+            [ngClass]="{'badge-warning': d.situacao === 'PENDENTE'}">
+              {{d.situacao}}
+            </span>
+          </td>
           <td>{{d.lote}}</td>
-          <td></td>
+          <td style="text-align: center">
+            <a href="javascript:;" pTooltip="Editar" tooltipPosition="top"
+            style="margin-right: .25em"><i class="fa fa-pencil"></i></a>
+            <a href="javascript:;" pTooltip="Excluir" tooltipPosition="top"><i class="fa fa-trash"></i></a>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="8" class="notextcenter">
+            Nenhum registro encontrado.
+          </td>
         </tr>
       </ng-template>
     </p-table>
   </div>
+
+  <p-dialog [(visible)]="dialog" [width]="600">
+    <p-header>Novo lançamento</p-header>
+    <div class="ui-g-12">
+      <form #f="ngForm" (ngSubmit)="onSubmit(f)" autocomplete="off">
+
+        <div class="ui-g-6 ui-fluid">
+          <label>Conta*</label>
+          <p-dropdown [options]="contas" name="conta" [autoWidth]="false" placeholder="Selecione:"
+                      [(ngModel)]="lancamento.conta.id" required></p-dropdown>
+        </div>
+
+        <div class="ui-g-12 ui-fluid">
+          <label>Cliente*</label>
+          <p-dropdown [options]="clientes" name="cliente" [autoWidth]="false" [filter]="true" placeholder="Selecione:"
+                      [(ngModel)]="lancamento.cliente.id" required
+                      emptyFilterMessage="Nenhum cliente encontrado!"></p-dropdown>
+        </div>
+
+        <div class="ui-g-4 ui-fluid" style="margin-top: 15px">
+        <span class="ui-float-label">
+          <input id="valor" type="text" pInputText name="valor"
+                 [(ngModel)]="lancamento.valor" required
+                 currencyMask [options]="{ prefix: '', thousands: '.', decimal: ',', allowNegative: false }">
+          <label for="valor">Valor*</label>
+        </span>
+        </div>
+
+        <div class="ui-g-6 ui-fluid" style="margin-top: 15px">
+        <span class="ui-float-label">
+          <p-calendar name="vencimento" dateFormat="dd/mm/yy" id="vencimento"
+                      [(ngModel)]="lancamento.vencimento" required></p-calendar>
+          <label for="vencimento">Vencimento*</label>
+        </span>
+        </div>
+
+      </form>
+    </div>
+    <p-footer>
+      <button pButton label="Clicar"></button>
+    </p-footer>
+  </p-dialog>
 
 </div>

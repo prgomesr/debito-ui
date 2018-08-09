@@ -1,14 +1,19 @@
 import {LOCALE_ID, NgModule} from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, registerLocaleData } from '@angular/common';
 import {HttpClientModule} from '@angular/common/http';
 import {RouterModule} from '@angular/router';
 import {NavbarComponent} from './navbar/navbar.component';
+import localePt from '@angular/common/locales/pt';
+import {SidebarModule} from 'primeng/sidebar';
+
+registerLocaleData(localePt);
 
 @NgModule({
   imports: [
     CommonModule,
     HttpClientModule,
-    RouterModule
+    RouterModule,
+    SidebarModule
   ],
   declarations: [NavbarComponent],
   exports: [NavbarComponent],

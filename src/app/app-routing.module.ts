@@ -4,6 +4,8 @@ import {RouterModule, Routes} from '@angular/router';
 const routes: Routes = [
   {path: 'dashboard', loadChildren: './dashboard/dashboard.module#DashboardModule'},
   {path: 'lancamentos', loadChildren: './lancamento/lancamento.module#LancamentoModule'},
+  {path: 'clientes', loadChildren: './cliente/cliente.module#ClienteModule'},
+  {path: 'contas', loadChildren: './conta/conta.module#ContaModule'},
   {path: '**', redirectTo: 'pagina-nao-encontrada'},
   {path: '', redirectTo: 'dashboard', pathMatch: 'full'}
 ];
