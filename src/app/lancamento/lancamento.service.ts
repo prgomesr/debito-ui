@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {ResourceService} from '../core/models/resource.service';
 import {HttpClient} from '@angular/common/http';
-import {LancamentoSerializer} from '../core/models/serializers';
 import {Lancamento} from '../core/models/model';
+import {LancamentoSerializer} from './lancamento-serializer';
 
 @Injectable({
   providedIn: 'root'

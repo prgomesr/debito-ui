@@ -7,7 +7,7 @@
   <div class="ui-g-12">
     <a href="javascript:;" style="text-decoration: none"
     pTooltip="Novo lançamento individual" tooltipPosition="right"
-    (click)="open()"><i class="fa fa-plus"></i> Novo</a>
+    (click)="openFormModal(f)"><i class="fa fa-plus"></i> Novo</a>
     <a href="javascript:;" style="text-decoration: none; margin-left: .50em"
     pTooltip="Novo baseado em anterior" tooltipPosition="right"><i class="fa fa-plus"></i> Novo em lote</a>
     <p-table [value]="lancamentos" [paginator]="true" [rows]="5" [responsive]="true">
@@ -54,15 +54,15 @@
     </p-table>
   </div>
 
-  <p-dialog [(visible)]="dialog" [width]="600">
+  <p-dialog [(visible)]="formModal" [width]="600" [modal]="true" [responsive]="true" [maximizable]="true" [minY]="120">
     <p-header>Novo lançamento</p-header>
     <div class="ui-g-12">
       <form #f="ngForm" (ngSubmit)="onSubmit(f)" autocomplete="off">
 
         <div class="ui-g-6 ui-fluid">
-          <label>Conta*</label>
-          <p-dropdown [options]="contas" name="conta" [autoWidth]="false" placeholder="Selecione:"
-                      [(ngModel)]="lancamento.conta.id" required></p-dropdown>
+          <label>Convênio*</label>
+          <p-dropdown [options]="convenios" name="convenio" [autoWidth]="false" placeholder="Selecione:"
+                      [(ngModel)]="lancamento.convenio.id" required></p-dropdown>
         </div>
 
         <div class="ui-g-12 ui-fluid">
@@ -89,11 +89,39 @@
         </span>
         </div>
 
+
+        <div class="ui-g-12">
+          <button pButton label="Salvar" type="submit"></button>
+        </div>
       </form>
     </div>
-    <p-footer>
-      <button pButton label="Clicar"></button>
-    </p-footer>
   </p-dialog>
+
+  <!--<p-dialog [(visible)]="searchModal" [width]="600" [modal]="true" [responsive]="true" [maximizable]="true" [minY]="120">-->
+    <!--<p-header>Pesquisa de lançamentos</p-header>-->
+    <!--<div class="ui-g-12">-->
+      <!--<form #f="ngForm" (ngSubmit)="search(f)" autocomplete="off">-->
+
+        <!--<div class="ui-g-6 ui-fluid">-->
+          <!--<label>Convênio*</label>-->
+          <!--<p-dropdown [options]="convenios" name="convenio" [autoWidth]="false" placeholder="Selecione:"-->
+                      <!--[(ngModel)]="lancamento.filtro.convenio.id" required></p-dropdown>-->
+        <!--</div>-->
+
+        <!--<div class="ui-g-6 ui-fluid" style="margin-top: 15px">-->
+        <!--<span class="ui-float-label">-->
+          <!--<p-calendar name="vencimento" dateFormat="dd/mm/yy" id="vencimento"-->
+                      <!--[(ngModel)]="lancamento.filtro.vencimento" required></p-calendar>-->
+          <!--<label for="vencimento">Vencimento*</label>-->
+        <!--</span>-->
+        <!--</div>-->
+
+
+      <!--</form>-->
+    <!--</div>-->
+    <!--<p-footer>-->
+        <!--<button pButton label="Salvar" type="submit"></button>-->
+    <!--</p-footer>-->
+  <!--</p-dialog>-->
 
 </div>

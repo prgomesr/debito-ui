@@ -1,8 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {NgForm} from '@angular/forms';
 import {LancamentoService} from './lancamento.service';
 import {Lancamento} from '../core/models/model';
-import {ContaService} from '../conta/conta.service';
 import {ClienteService} from '../cliente/cliente.service';
+import {ConvenioService} from '../convenio/convenio.service';
+import {NgxSpinnerService} from 'ngx-spinner';
+import {MessageService} from 'primeng/api';
 
 @Component({
   selector: 'app-lancamento',
@@ -13,35 +16,79 @@ export class LancamentoComponent implements OnInit {
 
   lancamentos = []
   lancamento = new Lancamento();
-  contas = [];
+  convenios = [];
   clientes = [];
-  dialog = false;
+  formModal = false;
+  searchModal = false;
+  pegarForm: NgForm;
   constructor(private service: LancamentoService,
-              private contaService: ContaService,
-              private clienteService: ClienteService) { }
+              private convenioService: ConvenioService,
+              private clienteService: ClienteService,
+              private spinner: NgxSpinnerService,
+              private toasty: MessageService) { }
 
   ngOnInit() {
     this.listar();
-    this.listarContas();
+    this.listarConvenios();
     this.listarClientes();
   }
 
   private listarClientes() {
-    this.clienteService.list().subscribe(dados => this.clientes = dados
-      .map(d => ({label: d.nome, value: d.id})));
+    this.spinner.show();
+    this.clienteService.list().subscribe(dados => {
+      this.clientes = dados
+        .map(d => ({label: d.nome, value: d.id}));
+      this.spinner.hide();
+    });
   }
 
-  private listarContas() {
-    this.contaService.list().subscribe(dados => this.contas = dados);
+  private listarConvenios() {
+    this.convenioService.list().subscribe(dados => this.convenios = dados
+      .map(d => ({label: d.numero, value: d.id})));
   }
 
   private listar() {
-    this.service.list().subscribe(dados => this.lancamentos = dados);
+    this.spinner.show();
+    this.service.list().subscribe(dados => {
+      this.lancamentos = dados;
+      this.spinner.hide();
+    });
   }
 
-  open() {
-    this.dialog = true;
+  openFormModal(id: number) {
+    this.formModal = true;
     this.lancamento = new Lancamento();
+  }
+
+  onSubmit(f) {
+    if (this.editando) {
+    console.log('editando');
+    } else {
+      this.save(f);
+    }
+  }
+
+  search(f) {
+
+  }
+
+  private save(f) {
+    this.spinner.show();
+    this.service.create(this.lancamento).subscribe(() => {
+      this.spinner.hide();
+      this.toasty.add({severity: 'success', summary: 'Sucesso!', detail: 'Lançamento salvo'})
+      f.reset();
+      this.formModal = false;
+      this.listar();
+    });
+  }
+
+  private listarPorId(id: number) {
+    this.service.read(id).subscribe(dado => this.lancamento = dado);
+  }
+
+  get editando(): any {
+    return Boolean (this.lancamento.id);
   }
 
 }

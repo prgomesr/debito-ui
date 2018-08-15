@@ -5,10 +5,10 @@ export class Lancamento extends Resource {
   valorPago: number;
   vencimento: Date;
   pagamento: Date;
-  situacao: string;
+  situacao = 'PENDENTE';
   lote: string;
   cliente = new Cliente();
-  conta = new Conta();
+  convenio = new Convenio();
 }
 
 export class Cliente extends Resource {
@@ -28,13 +28,14 @@ export class Conta extends Resource {
   numero: string;
   banco: string;
   empresa = new Empresa();
-  convenio = new Convenio();
 }
 
 export class Empresa extends Resource {
-
+  nome: string;
 }
 
 export class Convenio extends Resource {
-
+  numero: string;
+  sequencial: string;
+  conta = new Conta();
 }

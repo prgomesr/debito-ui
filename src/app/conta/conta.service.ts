@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
 import {ResourceService} from '../core/models/resource.service';
 import {Conta} from '../core/models/model';
-import {HttpClient} from '@angular/common/http';
-import {ContaSerializer} from '../core/models/serializers';
+import {ContaSerializer} from './conta-serializer';
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +10,7 @@ import {ContaSerializer} from '../core/models/serializers';
 export class ContaService extends ResourceService<Conta>{
 
   constructor(http: HttpClient) {
-    super(http, 'contas', new ContaSerializer() );
+    super(http, 'contas', new ContaSerializer
+    () );
   }
 }
