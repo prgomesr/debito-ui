@@ -66,7 +66,7 @@ export class RemessaComponent implements OnInit {
     this.lancamentoService.baixarRemessa(id).subscribe(dado => (dado));
     setTimeout(() => {
       this.listar();
-    }, 100);
+    }, 300);
   }
 
   gerarRemessa() {
