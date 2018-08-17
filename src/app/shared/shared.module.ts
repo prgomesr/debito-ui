@@ -13,14 +13,17 @@ import {InputTextModule} from 'primeng/inputtext';
 
 import { CurrencyMaskModule } from 'ng2-currency-mask';
 
+import { ModalModule } from 'ngx-bootstrap/modal';
+
 
 @NgModule({
   imports: [
     CommonModule,
-    RouterModule
+    RouterModule,
+    ModalModule.forRoot()
   ],
   declarations: [],
   exports: [TableModule, ButtonModule, TooltipModule, DialogModule, FormsModule, DropdownModule, CurrencyMaskModule,
-  CalendarModule, InputTextModule]
+  CalendarModule, InputTextModule, ModalModule]
 })
 export class SharedModule { }

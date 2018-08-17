@@ -1,0 +1,109 @@
+<div class="ui-g">
+
+  <div class="ui-g-12">
+    <h1>Remessas</h1>
+  </div>
+
+  <div class="ui-g-12">
+    <a href="javascript:;" style="text-decoration: none; margin-left: .50em"
+       pTooltip="Nova Remessa" tooltipPosition="right"
+       (click)="openSearchModal(searchModal)"><i class="fa fa-plus"></i> Novo</a>
+    <p-table [value]="remessas" [paginator]="true" [rows]="5" [responsive]="true">
+      <ng-template pTemplate="header">
+        <tr>
+          <th class="notextcenter">Nome</th>
+          <th style="width: 130px">Valor</th>
+          <th style="width: 100px">Data</th>
+          <th style="width: 130px">Situação</th>
+          <th style="width: 70px"></th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-d>
+        <tr>
+          <td class="notextcenter">{{d.nome}}</td>
+          <td style="color: blue">{{d.valor | number:'1.2-2'}}</td>
+          <td>{{d.data | date: 'dd/MM/yyyy'}}</td>
+          <td>
+            <span class="badge"
+                  [ngClass]="{'badge-warning': d.situacao === 'NÃO BAIXADA',
+                  'badge-success': d.situacao === 'BAIXADA'}">
+              {{d.situacao}}
+            </span>
+          </td>
+          <td style="text-align: center">
+            <a href="javascript:;" pTooltip="Baixar" tooltipPosition="top"
+               style="margin-right: .25em"
+            (click)="baixar(d.id); nomeArquivo(d.nome)"><i class="fas fa-download"></i></a>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="5" class="notextcenter">
+            Nenhum registro encontrado.
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+  <ng-template #searchModal>
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Pesquisa de Lançamentos</h4>
+      <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form #f="ngForm" (ngSubmit)="listarLancamentos()" autocomplete="off">
+
+        <div class="ui-g-6 ui-fluid">
+          <label>Convênio*</label>
+          <p-dropdown [options]="convenios" name="convenio" [autoWidth]="false" placeholder="Selecione:"
+                      [(ngModel)]="filtro.convenio" required></p-dropdown>
+        </div>
+
+        <div class="ui-g-6 ui-fluid">
+          <label>Vencimento*</label>
+          <p-calendar name="vencimento" dateFormat="dd/mm/yy"
+                      [(ngModel)]="filtro.vencimento" required></p-calendar>
+        </div>
+
+        <div class="ui-g-12">
+          <button pButton label="Filtrar" type="submit" style="margin-right: .25em"></button>
+          <button type="button" pButton label="Limpar" class="ui-button-secondary"
+                  (click)="f.reset()"></button>
+        </div>
+      </form>
+      <div class="ui-g-12">
+        <p-table [value]="lancamentos" [scrollable]="true" scrollHeight="200px">
+          <ng-template pTemplate="header">
+            <tr>
+              <th class="notextcenter">Cliente</th>
+              <th style="width: 100px">Valor</th>
+              <th style="width: 120px">Vencimento</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-d>
+            <tr>
+              <td class="notextcenter">{{d.cliente}}</td>
+              <td style="color: blue; width: 100px" >{{d.valor | number:'1.2-2'}}</td>
+              <td style="width: 120px">{{d.vencimento | date: 'dd/MM/yyyy'}}</td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="3" class="notextcenter">
+                Nenhum registro encontrado.
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+      <div class="ui-g-12">
+        <button pButton type="button" label="Gerar Remessa" (click)="gerarRemessa()"
+                [disabled]="f.invalid"></button>
+      </div>
+    </div>
+  </ng-template>
+</div>

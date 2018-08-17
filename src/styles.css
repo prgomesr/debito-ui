@@ -27,3 +27,7 @@ tr > th {
 .notextcenter {
  text-align: left;
 }
+
+.modal-devllop {
+  max-width: 600px;
+}

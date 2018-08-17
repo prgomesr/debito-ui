@@ -6,6 +6,7 @@ const routes: Routes = [
   {path: 'lancamentos', loadChildren: './lancamento/lancamento.module#LancamentoModule'},
   {path: 'clientes', loadChildren: './cliente/cliente.module#ClienteModule'},
   {path: 'contas', loadChildren: './conta/conta.module#ContaModule'},
+  {path: 'remessas', loadChildren: './remessa/remessa.module#RemessaModule'},
   {path: '**', redirectTo: 'pagina-nao-encontrada'},
   {path: '', redirectTo: 'dashboard', pathMatch: 'full'}
 ];

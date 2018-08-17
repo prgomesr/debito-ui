@@ -1,11 +1,12 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, TemplateRef} from '@angular/core';
 import {NgForm} from '@angular/forms';
 import {LancamentoService} from './lancamento.service';
-import {Lancamento} from '../core/models/model';
+import {Filtro, Lancamento} from '../core/models/model';
 import {ClienteService} from '../cliente/cliente.service';
 import {ConvenioService} from '../convenio/convenio.service';
 import {NgxSpinnerService} from 'ngx-spinner';
 import {MessageService} from 'primeng/api';
+import {BsModalRef, BsModalService} from 'ngx-bootstrap';
 
 @Component({
   selector: 'app-lancamento',
@@ -14,22 +15,27 @@ import {MessageService} from 'primeng/api';
 })
 export class LancamentoComponent implements OnInit {
 
-  lancamentos = []
+  lancamentos = [];
   lancamento = new Lancamento();
   convenios = [];
+  conveniosFiltros = [];
   clientes = [];
   formModal = false;
-  searchModal = false;
   pegarForm: NgForm;
+  filtro = new Filtro();
+  modalRef: BsModalRef;
+  habilitarRemessa = false;
   constructor(private service: LancamentoService,
               private convenioService: ConvenioService,
               private clienteService: ClienteService,
               private spinner: NgxSpinnerService,
-              private toasty: MessageService) { }
+              private toasty: MessageService,
+              private modalService: BsModalService) { }
 
   ngOnInit() {
     this.listar();
     this.listarConvenios();
+    this.listarConveniosFiltro();
     this.listarClientes();
   }
 
@@ -47,9 +53,14 @@ export class LancamentoComponent implements OnInit {
       .map(d => ({label: d.numero, value: d.id})));
   }
 
-  private listar() {
+  private listarConveniosFiltro() {
+    this.convenioService.list().subscribe(dados => this.conveniosFiltros = dados
+      .map(d => ({label: d.numero, value: d})));
+  }
+
+  public listar() {
     this.spinner.show();
-    this.service.list().subscribe(dados => {
+    this.service.filter(this.filtro).subscribe(dados => {
       this.lancamentos = dados;
       this.spinner.hide();
     });
@@ -76,7 +87,7 @@ export class LancamentoComponent implements OnInit {
     this.spinner.show();
     this.service.create(this.lancamento).subscribe(() => {
       this.spinner.hide();
-      this.toasty.add({severity: 'success', summary: 'Sucesso!', detail: 'Lançamento salvo'})
+      this.toasty.add({severity: 'success', summary: 'Sucesso!', detail: 'Lançamento salvo'});
       f.reset();
       this.formModal = false;
       this.listar();
@@ -85,6 +96,10 @@ export class LancamentoComponent implements OnInit {
 
   private listarPorId(id: number) {
     this.service.read(id).subscribe(dado => this.lancamento = dado);
+  }
+
+  openSearchModal(template: TemplateRef<any>) {
+    this.modalRef = this.modalService.show(template, {class: 'modal-devllop'});
   }
 
   get editando(): any {

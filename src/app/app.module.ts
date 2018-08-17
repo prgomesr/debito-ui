@@ -6,7 +6,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {CoreModule} from './core/core.module';
 import {AppRoutingModule} from './app-routing.module';
 
-import { NgxSpinnerModule } from 'ngx-spinner';
+import {NgxSpinnerModule} from 'ngx-spinner';
 import {ToastModule} from 'primeng/toast';
 import {MessageService} from 'primeng/api';
 

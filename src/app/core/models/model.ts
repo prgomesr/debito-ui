@@ -39,3 +39,16 @@ export class Convenio extends Resource {
   sequencial: string;
   conta = new Conta();
 }
+
+export class Filtro {
+  vencimento: Date;
+  convenio: Convenio;
+}
+
+export class Remessa  extends Resource {
+  nome: string;
+  data: Date;
+  valor: number;
+  situacao: string;
+}
+
