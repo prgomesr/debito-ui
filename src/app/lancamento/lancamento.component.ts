@@ -25,6 +25,7 @@ export class LancamentoComponent implements OnInit {
   filtro = new Filtro();
   modalRef: BsModalRef;
   habilitarRemessa = false;
+  vencimento: Date;
   constructor(private service: LancamentoService,
               private convenioService: ConvenioService,
               private clienteService: ClienteService,
@@ -102,8 +103,25 @@ export class LancamentoComponent implements OnInit {
     this.modalRef = this.modalService.show(template, {class: 'modal-devllop'});
   }
 
+  openLancamentoPorLote(template: TemplateRef<any>) {
+    this.modalRef = this.modalService.show(template, {class: 'modal-devllop'});
+  }
+
   get editando(): any {
     return Boolean (this.lancamento.id);
+  }
+
+  gerarPorLote(f) {
+    this.spinner.show();
+    this.service.lancamentoPorLote(this.filtro, this.vencimento).subscribe(() => {
+      this.spinner.hide();
+      this.toasty.add({severity: 'success', summary: 'Sucesso!', detail: 'Lançamento (s) gerado (s)'});
+      this.filtro = new Filtro();
+      setTimeout(() => {
+        this.modalRef.hide();
+        this.listar();
+      }, 100);
+    });
   }
 
 }

@@ -69,6 +69,21 @@ export class ResourceService<T extends Resource> {
       .get<any[]>(`${this.url}/${this.endpoint}/gerar-remessa`, {params});
   }
 
+  lancamentoPorLote(filtro: Filtro, vencimento: Date): Observable<T> {
+    let params = new HttpParams();
+    if (filtro.convenio) {
+      params = params.set('convenio', filtro.convenio.id.toString());
+    }
+    if (filtro.vencimento) {
+      params = params.set('vencimento', moment(filtro.vencimento).format('YYYY-MM-DD'));
+    }
+    if (vencimento) {
+      moment(vencimento).format('YYYY-MM-DD');
+    }
+    return this.http
+      .post<T>(`${this.url}/${this.endpoint}/cadastrar-por-lote`, vencimento, {params});
+  }
+
   baixarRemessa(id: number) {
     return this.http
       .get(`${this.url}/${this.endpoint}/${id}/pegar-remessa`, {responseType: 'blob'})
