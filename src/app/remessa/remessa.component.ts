@@ -7,6 +7,7 @@ import {BsModalRef, BsModalService} from 'ngx-bootstrap';
 import {MessageService} from 'primeng/api';
 import {ConvenioService} from '../convenio/convenio.service';
 import {environment} from '../../environments/environment';
+import {ErrorHandlerService} from '../core/error-handler.service';
 
 @Component({
   selector: 'app-remessa',
@@ -25,7 +26,8 @@ export class RemessaComponent implements OnInit {
               private convenioService: ConvenioService,
               private spinner: NgxSpinnerService,
               private toasty: MessageService,
-              private modalService: BsModalService) { }
+              private modalService: BsModalService,
+              private errorHandler: ErrorHandlerService) { }
 
   ngOnInit() {
     this.listar();
@@ -77,7 +79,11 @@ export class RemessaComponent implements OnInit {
       this.listar();
       this.toasty.add({severity: 'success', summary: 'Sucesso!', detail: 'Remessa gerada'});
       this.modalRef.hide();
-    });
+    },
+      error => {
+      this.errorHandler.handle(error);
+      this.spinner.hide();
+      });
   }
 
   nomeArquivo(nome: string) {
