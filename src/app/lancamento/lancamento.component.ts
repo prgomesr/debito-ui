@@ -1,5 +1,4 @@
 import {Component, OnInit, TemplateRef} from '@angular/core';
-import {NgForm} from '@angular/forms';
 import {LancamentoService} from './lancamento.service';
 import {Filtro, Lancamento} from '../core/models/model';
 import {ClienteService} from '../cliente/cliente.service';
@@ -7,6 +6,7 @@ import {ConvenioService} from '../convenio/convenio.service';
 import {NgxSpinnerService} from 'ngx-spinner';
 import {MessageService} from 'primeng/api';
 import {BsModalRef, BsModalService} from 'ngx-bootstrap';
+import {ErrorHandlerService} from '../core/error-handler.service';
 
 @Component({
   selector: 'app-lancamento',
@@ -21,7 +21,6 @@ export class LancamentoComponent implements OnInit {
   conveniosFiltros = [];
   clientes = [];
   formModal = false;
-  pegarForm: NgForm;
   filtro = new Filtro();
   modalRef: BsModalRef;
   habilitarRemessa = false;
@@ -31,7 +30,8 @@ export class LancamentoComponent implements OnInit {
               private clienteService: ClienteService,
               private spinner: NgxSpinnerService,
               private toasty: MessageService,
-              private modalService: BsModalService) { }
+              private modalService: BsModalService,
+              private errorHandler: ErrorHandlerService) { }
 
   ngOnInit() {
     this.listar();
@@ -46,17 +46,29 @@ export class LancamentoComponent implements OnInit {
       this.clientes = dados
         .map(d => ({label: d.nome, value: d.id}));
       this.spinner.hide();
-    });
+    },
+      error => {
+        this.errorHandler.handle(error);
+        this.spinner.hide();
+      });
   }
 
   private listarConvenios() {
     this.convenioService.list().subscribe(dados => this.convenios = dados
-      .map(d => ({label: d.numero, value: d.id})));
+      .map(d => ({label: d.numero, value: d.id})),
+      error => {
+        this.errorHandler.handle(error);
+        this.spinner.hide();
+      });
   }
 
   private listarConveniosFiltro() {
     this.convenioService.list().subscribe(dados => this.conveniosFiltros = dados
-      .map(d => ({label: d.numero, value: d})));
+      .map(d => ({label: d.numero, value: d})),
+      error => {
+        this.errorHandler.handle(error);
+        this.spinner.hide();
+      });
   }
 
   public listar() {
@@ -64,7 +76,11 @@ export class LancamentoComponent implements OnInit {
     this.service.filter(this.filtro).subscribe(dados => {
       this.lancamentos = dados;
       this.spinner.hide();
-    });
+    },
+      error => {
+        this.errorHandler.handle(error);
+        this.spinner.hide();
+      });
   }
 
   openFormModal(id: number) {
@@ -92,11 +108,23 @@ export class LancamentoComponent implements OnInit {
       f.reset();
       this.formModal = false;
       this.listar();
-    });
+    },
+      error => {
+        this.errorHandler.handle(error);
+        this.spinner.hide();
+      });
   }
 
   private listarPorId(id: number) {
-    this.service.read(id).subscribe(dado => this.lancamento = dado);
+    this.spinner.show();
+    this.service.read(id).subscribe(dado => {
+      this.lancamento = dado;
+      this.spinner.hide();
+    },
+      error => {
+        this.errorHandler.handle(error);
+        this.spinner.hide();
+      });
   }
 
   openSearchModal(template: TemplateRef<any>) {
@@ -121,7 +149,11 @@ export class LancamentoComponent implements OnInit {
         this.modalRef.hide();
         this.listar();
       }, 100);
-    });
+    },
+      error => {
+        this.errorHandler.handle(error);
+        this.spinner.hide();
+      });
   }
 
 }

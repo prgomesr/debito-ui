@@ -30,6 +30,9 @@ export class ErrorHandlerService {
 
     } else {
       msg = errorResponse.error[0].mensagemUsuario;
+      if (msg == null ) {
+        msg = 'Tente novamente ou entre em contato com o administrador do sistema';
+      }
       console.error('Ocorreu um erro', errorResponse);
     }
 

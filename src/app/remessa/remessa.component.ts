@@ -21,13 +21,15 @@ export class RemessaComponent implements OnInit {
   convenios = [];
   filtro = new Filtro();
   modalRef: BsModalRef;
+
   constructor(private service: RemessaService,
               private lancamentoService: LancamentoService,
               private convenioService: ConvenioService,
               private spinner: NgxSpinnerService,
               private toasty: MessageService,
               private modalService: BsModalService,
-              private errorHandler: ErrorHandlerService) { }
+              private errorHandler: ErrorHandlerService) {
+  }
 
   ngOnInit() {
     this.listar();
@@ -36,26 +38,38 @@ export class RemessaComponent implements OnInit {
   private listar() {
     this.spinner.show();
     this.service.list().subscribe(dados => {
-      this.remessas = dados;
-      this.spinner.hide();
-    });
+        this.remessas = dados;
+        this.spinner.hide();
+      },
+      error => {
+        this.errorHandler.handle(error);
+        this.spinner.hide();
+      });
   }
 
   listarLancamentos() {
     this.spinner.show();
     this.lancamentoService.filter(this.filtro).subscribe(dados => {
-      this.spinner.hide();
-      this.lancamentos = dados;
-    });
+        this.spinner.hide();
+        this.lancamentos = dados;
+      },
+      error => {
+        this.errorHandler.handle(error);
+        this.spinner.hide();
+      });
   }
 
   listarConvenios() {
     this.spinner.show();
     this.convenioService.list().subscribe(dados => {
-      this.spinner.hide();
-      this.convenios = dados
-        .map(d => ({label: d.numero, value: d}));
-    });
+        this.spinner.hide();
+        this.convenios = dados
+          .map(d => ({label: d.numero, value: d}));
+      },
+      error => {
+        this.errorHandler.handle(error);
+        this.spinner.hide();
+      });
   }
 
   openSearchModal(template: TemplateRef<any>) {
@@ -65,24 +79,31 @@ export class RemessaComponent implements OnInit {
   }
 
   baixar(id: number) {
-    this.lancamentoService.baixarRemessa(id).subscribe(dado => (dado));
-    setTimeout(() => {
-      this.listar();
-    }, 300);
+    this.spinner.show();
+    this.lancamentoService.baixarRemessa(id).subscribe(() => {
+        this.spinner.hide();
+        setTimeout(() => {
+          this.listar();
+        }, 300);
+      },
+      error => {
+        this.errorHandler.handle(error);
+        this.spinner.hide();
+      });
   }
 
   gerarRemessa() {
     this.spinner.show();
     this.lancamentoService.filterRemessa(this.filtro).subscribe(dados => {
-      this.spinner.hide();
-      this.lancamentos = dados;
-      this.listar();
-      this.toasty.add({severity: 'success', summary: 'Sucesso!', detail: 'Remessa gerada'});
-      this.modalRef.hide();
-    },
+        this.spinner.hide();
+        this.lancamentos = dados;
+        this.listar();
+        this.toasty.add({severity: 'success', summary: 'Sucesso!', detail: 'Remessa gerada'});
+        this.modalRef.hide();
+      },
       error => {
-      this.errorHandler.handle(error);
-      this.spinner.hide();
+        this.errorHandler.handle(error);
+        this.spinner.hide();
       });
   }
 

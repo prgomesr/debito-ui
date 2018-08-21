@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
-import {Remessa} from '../core/models/model';
-import {ResourceService} from '../core/models/resource.service';
+import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {RemessaSerializer} from './remessa-serializer';
+import {ResourceService} from '../core/models/resource.service';
+import {Remessa} from '../core/models/model';
 
 @Injectable({
   providedIn: 'root'

@@ -4,6 +4,7 @@ import {ConvenioComponent} from './convenio.component';
 import {ConvenioService} from './convenio.service';
 import {SharedModule} from '../shared/shared.module';
 import {ConvenioRoutingModule} from './convenio-routing.module';
+import {ContaService} from '../conta/conta.service';
 
 @NgModule({
   imports: [
@@ -12,6 +13,6 @@ import {ConvenioRoutingModule} from './convenio-routing.module';
     ConvenioRoutingModule
   ],
   declarations: [ConvenioComponent],
-  providers: [ConvenioService]
+  providers: [ConvenioService, ContaService]
 })
 export class ConvenioModule { }

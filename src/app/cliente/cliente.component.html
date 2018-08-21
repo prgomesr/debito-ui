@@ -1,3 +1,124 @@
-<p>
-  cliente works!
-</p>
+<div class="ui-g">
+
+  <div class="ui-g-12">
+    <h1>Clientes</h1>
+  </div>
+
+  <div class="ui-g-12">
+    <a href="javascript:;" style="text-decoration: none; margin-left: .50em"
+       pTooltip="Cadastrar Novo" tooltipPosition="right"
+       (click)="openFormModal(formModal)"><i class="fa fa-plus"></i> Novo</a>
+    <p-table [value]="clientes" [paginator]="true" [rows]="20" [responsive]="true">
+      <ng-template pTemplate="header">
+        <tr>
+          <th class="notextcenter">Nome</th>
+          <th style="width: 130px">Contato</th>
+          <th style="width: 130px">Recado</th>
+          <th style="width: 130px">Agência</th>
+          <th style="width: 100px">Conta</th>
+          <th style="width: 130px">Situação</th>
+          <th style="width: 70px"></th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-d>
+        <tr>
+          <td class="notextcenter">{{d.nome}}</td>
+          <td>{{d.telefone1}}</td>
+          <td>{{d.telefone2}}</td>
+          <td>{{d.agencia}}</td>
+          <td>{{d.conta}}</td>
+          <td>
+            <span class="badge"
+                  [ngClass]="{'badge-warning': d.situacao === 'INADIMPLENTE',
+                  'badge-success': d.situacao === 'EM DIA'}">
+              {{d.situacao}}
+            </span>
+          </td>
+          <td style="text-align: center">
+            <a href="javascript:;" pTooltip="Editar" tooltipPosition="top"
+               style="margin-right: .25em"
+               (click)="openFormModal(formModal, d.id)"><i class="far fa-edit"></i></a>
+            <a href="javascript:;" pTooltip="Inativar" tooltipPosition="top"
+               style="margin-right: .25em" *ngIf="d.ativo === true"
+               (click)="atualizarAtivo(d.id, false)"><i class="far fa-window-close"></i></a>
+            <a href="javascript:;" pTooltip="Ativar" tooltipPosition="top"
+               *ngIf="d.ativo === false"
+               (click)="atualizarAtivo(d.id, true)"><i class="far fa-check-square"></i></a>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="5" class="notextcenter">
+            Nenhum registro encontrado.
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+  <ng-template #formModal>
+    <div class="modal-header">
+      <h4 class="modal-title pull-left" *ngIf="!editando">Novo Cliente</h4>
+      <h4 class="modal-title pull-left" *ngIf="editando">Editando Cliente</h4>
+      <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form #f="ngForm" (ngSubmit)="onSubmit(f)" autocomplete="off">
+
+        <div class="ui-g-6 ui-fluid">
+          <label>Nome*</label>
+          <input type="text" pInputText name="nome" [(ngModel)]="cliente.nome" required>
+        </div>
+
+        <div class="ui-g-3 ui-fluid">
+          <label>Contato</label>
+          <input type="text" pInputText name="contato" [(ngModel)]="cliente.telefone1">
+        </div>
+
+        <div class="ui-g-3 ui-fluid">
+          <label>Recado</label>
+          <input type="text" pInputText name="recado" [(ngModel)]="cliente.telefone2">
+        </div>
+
+        <div class="ui-g-2 ui-fluid">
+          <label>Agência*</label>
+          <input type="text" pInputText name="agencia" [(ngModel)]="cliente.agencia" required>
+        </div>
+        <div class="ui-g-1 ui-fluid">
+          <label>Dígito</label>
+          <input type="text" pInputText name="digitoAgencia" [(ngModel)]="cliente.digitoAgencia">
+        </div>
+
+        <div class="ui-g-2 ui-fluid">
+          <label>Conta*</label>
+          <input type="text" pInputText name="conta" [(ngModel)]="cliente.conta" required>
+        </div>
+        <div class="ui-g-1 ui-fluid">
+          <label>Dígito</label>
+          <input type="text" pInputText name="digitoConta" [(ngModel)]="cliente.digitoConta">
+        </div>
+
+        <div class="ui-g-3 ui-fluid">
+          <label>Ident. do Banco</label>
+          <input type="text" pInputText name="identificador" [(ngModel)]="cliente.identificadorBanco"
+                 [disabled]="true">
+        </div>
+
+        <div class="ui-g-3 ui-fluid">
+          <label>Banco*</label>
+          <p-dropdown [options]="bancos" placeholder="Selecione: " name="banco"
+                      [(ngModel)]="cliente.banco" [autoWidth]="false" required></p-dropdown>
+        </div>
+
+        <div class="ui-g-12">
+          <button pButton label="Salvar" type="submit" style="margin-right: .25em"
+                  [disabled]="f.invalid || f.pristine"></button>
+        </div>
+      </form>
+    </div>
+  </ng-template>
+
+</div>

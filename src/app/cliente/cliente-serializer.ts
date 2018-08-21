@@ -11,6 +11,10 @@ export class ClienteSerializer {
     cliente.banco = json.banco;
     cliente.identificadorBanco = json.identificadorBanco;
     cliente.nome = json.nome;
+    cliente.ativo = json.ativo;
+    cliente.telefone1 = json.telefone1;
+    cliente.telefone2 = json.telefone2;
+    cliente.situacao = json.situacao;
 
     return cliente;
   }
@@ -24,7 +28,11 @@ export class ClienteSerializer {
       digitoAgencia: cliente.digitoAgencia,
       digitoConta: cliente.digitoConta,
       identificadorBanco: cliente.identificadorBanco,
-      conta: cliente.conta
+      conta: cliente.conta,
+      ativo: cliente.ativo,
+      telefone1: cliente.telefone1,
+      telefone2: cliente.telefone2,
+      situacao: cliente.situacao
     };
   }
 }

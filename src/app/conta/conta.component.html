@@ -1,3 +1,93 @@
-<p>
-  conta works!
-</p>
+<div class="ui-g">
+
+  <div class="ui-g-12">
+    <h1>Contas</h1>
+  </div>
+
+  <div class="ui-g-12">
+    <a href="javascript:;" style="text-decoration: none; margin-left: .50em"
+       pTooltip="Cadastrar Novo" tooltipPosition="right"
+       (click)="openFormModal(formModal)"><i class="fa fa-plus"></i> Novo</a>
+    <p-table [value]="contas" [paginator]="true" [rows]="20" [responsive]="true">
+      <ng-template pTemplate="header">
+        <tr>
+          <th class="notextcenter">Número</th>
+          <th style="width: 130px">Agência</th>
+          <th style="width: 180px">Banco</th>
+          <th style="width: 70px"></th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-d>
+        <tr>
+          <td class="notextcenter">{{d.numero}}</td>
+          <td>{{d.agencia}}</td>
+          <td>{{d.banco}}</td>
+          <td style="text-align: center">
+            <a href="javascript:;" pTooltip="Editar" tooltipPosition="top"
+               style="margin-right: .25em"
+               (click)="openFormModal(formModal, d.id)"><i class="far fa-edit"></i></a>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="4" class="notextcenter">
+            Nenhum registro encontrado.
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+  <ng-template #formModal>
+    <div class="modal-header">
+      <h4 class="modal-title pull-left" *ngIf="!editando">Nova Conta</h4>
+      <h4 class="modal-title pull-left" *ngIf="editando">Editando Conta</h4>
+      <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form #f="ngForm" (ngSubmit)="onSubmit(f)" autocomplete="off">
+
+        <div class="ui-g-4 ui-fluid">
+          <label>Número*</label>
+          <input type="text" pInputText name="numero" [(ngModel)]="conta.numero" required>
+        </div>
+
+        <div class="ui-g-2 ui-fluid">
+          <label>Dígito</label>
+          <input type="text" pInputText name="digitoConta" [(ngModel)]="conta.digitoConta">
+        </div>
+
+        <div class="ui-g-4 ui-fluid">
+          <label>Agência*</label>
+          <input type="text" pInputText name="agencia" [(ngModel)]="conta.agencia" required>
+        </div>
+
+        <div class="ui-g-2 ui-fluid">
+          <label>Dígito</label>
+          <input type="text" pInputText name="digitoAgencia" [(ngModel)]="conta.digitoAgencia">
+        </div>
+
+        <div class="ui-g-7 ui-fluid">
+          <label>Empresa*</label>
+          <p-dropdown [options]="empresas" name="empresa"
+                      [(ngModel)]="conta.empresa.id" [autoWidth]="false" required></p-dropdown>
+        </div>
+
+        <div class="ui-g-5 ui-fluid">
+          <label>Banco*</label>
+          <p-dropdown [options]="bancos" placeholder="Selecione: " name="banco"
+                      [(ngModel)]="conta.banco" [autoWidth]="false" required></p-dropdown>
+        </div>
+
+        <div class="ui-g-12">
+          <button pButton label="Salvar" type="submit" style="margin-right: .25em"
+                  [disabled]="f.invalid || f.pristine"></button>
+        </div>
+      </form>
+    </div>
+  </ng-template>
+
+</div>

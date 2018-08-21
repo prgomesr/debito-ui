@@ -19,6 +19,10 @@ export class Cliente extends Resource {
   digitoConta: string;
   identificadorBanco: string;
   banco: string;
+  ativo = true;
+  telefone1: string;
+  telefone2: string;
+  situacao = 'EM DIA';
 }
 
 export class Conta extends Resource {
