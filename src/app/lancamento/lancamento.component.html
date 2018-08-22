@@ -7,15 +7,16 @@
   <div class="ui-g-12">
     <a href="javascript:;" style="text-decoration: none"
        pTooltip="Novo lançamento individual" tooltipPosition="right"
-       (click)="openFormModal(f)"><i class="fa fa-plus"></i> Novo</a>
+       (click)="openFormModal(formModal)"><i class="fa fa-plus"></i> Novo</a>
     <a href="javascript:;" style="text-decoration: none; margin-left: .50em"
        pTooltip="Novo baseado em anterior" tooltipPosition="right"
-    (click)="openLancamentoPorLote(lancamentoPorLote)">
+       (click)="openLancamentoPorLote(lancamentoPorLote)">
       <i class="fa fa-plus"></i> Novo em lote</a>
     <a href="javascript:;" style="text-decoration: none; margin-left: .50em"
        pTooltip="Pesquisar/Gerar Remessa" tooltipPosition="right"
        (click)="openSearchModal(searchModal)"><i class="fa fa-search"></i> Pesquisar</a>
-    <p-table [value]="lancamentos" [paginator]="true" [rows]="20" [responsive]="true">
+    <p-table [value]="lancamentos" [paginator]="true" [rows]="filtro.itensPorPagina" [responsive]="true"
+             [lazy]="true" [totalRecords]="totalRegistros" (onLazyLoad)="aoMudarPagina($event)">
       <ng-template pTemplate="header">
         <tr>
           <th class="notextcenter">Cliente</th>
@@ -44,7 +45,8 @@
           <td>{{d.lote}}</td>
           <td style="text-align: center">
             <a href="javascript:;" pTooltip="Editar" tooltipPosition="top"
-               style="margin-right: .25em"><i class="far fa-edit"></i></a>
+               style="margin-right: .25em"
+               (click)="openFormModal(formModal, d.id)"><i class="far fa-edit"></i></a>
             <a href="javascript:;" pTooltip="Excluir" tooltipPosition="top"><i class="far fa-trash-alt"></i></a>
           </td>
         </tr>
@@ -60,9 +62,14 @@
   </div>
 
 
-  <p-dialog [(visible)]="formModal" [width]="600" [modal]="true" [responsive]="true" [maximizable]="true" [minY]="120">
-    <p-header>Novo lançamento</p-header>
-    <div class="ui-g-12">
+  <ng-template #formModal>
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Novo de Lançamento</h4>
+      <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
       <form #f="ngForm" (ngSubmit)="onSubmit(f)" autocomplete="off">
 
         <div class="ui-g-6 ui-fluid">
@@ -97,11 +104,11 @@
 
 
         <div class="ui-g-12">
-          <button pButton label="Salvar" type="submit"></button>
+          <button pButton label="Salvar" type="submit" [disabled]="f.invalid"></button>
         </div>
       </form>
     </div>
-  </p-dialog>
+  </ng-template>
 
   <ng-template #searchModal>
     <div class="modal-header">
@@ -111,7 +118,7 @@
       </button>
     </div>
     <div class="modal-body">
-      <form #f="ngForm" (ngSubmit)="listar(); habilitarRemessa === true" autocomplete="off">
+      <form #f="ngForm" (ngSubmit)="listarComPaginacao()" autocomplete="off">
 
         <div class="ui-g-6 ui-fluid">
           <label>Convênio*</label>
@@ -131,34 +138,12 @@
                   (click)="f.reset()"></button>
         </div>
       </form>
-      <div class="ui-g-12">
-        <p-table [value]="lancamentos" [scrollable]="true" scrollHeight="200px">
-          <ng-template pTemplate="header">
-            <tr>
-              <th class="notextcenter">Cliente</th>
-              <th style="width: 100px">Valor</th>
-              <th style="width: 120px">Vencimento</th>
-            </tr>
-          </ng-template>
-          <ng-template pTemplate="body" let-d>
-            <tr>
-              <td class="notextcenter">{{d.cliente}}</td>
-              <td style="color: blue; width: 100px">{{d.valor | number:'1.2-2'}}</td>
-              <td style="width: 120px">{{d.vencimento | date: 'dd/MM/yyyy'}}</td>
-            </tr>
-          </ng-template>
-        </p-table>
-      </div>
-      <div class="ui-g-12">
-        <button pButton type="button" label="Gerar Remessa" (click)="gerarRemessa()"
-                *ngIf="habilitarRemessa === true"></button>
-      </div>
     </div>
   </ng-template>
 
   <ng-template #lancamentoPorLote>
     <div class="modal-header">
-      <h4 class="modal-title pull-left">Pesquisa de Lançamentos</h4>
+      <h4 class="modal-title pull-left">Gerar Lançamentos Em Lote</h4>
       <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
         <span aria-hidden="true">&times;</span>
       </button>
@@ -175,17 +160,18 @@
         <div class="ui-g-6 ui-fluid">
           <label>Vencimento*</label>
           <p-calendar name="vencimento" dateFormat="dd/mm/yy"
-                      [(ngModel)]="filtro.vencimento" required></p-calendar>
+                      [(ngModel)]="filtro.vencimento"></p-calendar>
         </div>
 
         <div class="ui-g-12">
-          <button pButton label="Filtrar" type="submit" style="margin-right: .25em"></button>
+          <button pButton label="Filtrar" type="submit" style="margin-right: .25em"
+                  [disabled]="f.invalid"></button>
           <button type="button" pButton label="Limpar" class="ui-button-secondary"
-                  (click)="f.reset()"></button>
+                  (click)="f.reset(); limparFiltro()"></button>
         </div>
       </form>
       <div class="ui-g-12">
-        <p-table [value]="lancamentos" [scrollable]="true" scrollHeight="200px">
+        <p-table [value]="lancamentosFiltro" [scrollable]="true" scrollHeight="200px">
           <ng-template pTemplate="header">
             <tr>
               <th class="notextcenter">Cliente</th>
@@ -203,13 +189,13 @@
           <ng-template pTemplate="emptymessage">
             <tr>
               <td colspan="3" class="notextcenter">
-                Nenhum registro encontrado.
+                Nenhum lançamento inserido ao lote.
               </td>
             </tr>
           </ng-template>
         </p-table>
       </div>
-      <form #f="ngForm" autocomplete="off" (ngSubmit)="gerarPorLote(f)">
+      <form #fVencimento="ngForm" autocomplete="off" (ngSubmit)="gerarPorLote(f)">
 
         <div class="ui-g-6 ui-fluid">
           <label>Próximo Vencimento*</label>
@@ -219,7 +205,7 @@
 
         <div class="ui-g-12">
           <button pButton type="submit" label="Gerar Lançamentos"
-                  [disabled]="f.invalid"></button>
+                  [(disabled)]="valor || f.invalid"></button>
         </div>
 
       </form>

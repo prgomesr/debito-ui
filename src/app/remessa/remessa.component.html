@@ -33,7 +33,7 @@
           <td style="text-align: center">
             <a href="javascript:;" pTooltip="Baixar" tooltipPosition="top"
                style="margin-right: .25em"
-            (click)="baixar(d.id); nomeArquivo(d.nome)"><i class="fas fa-download"></i></a>
+               (click)="baixar(d.id); nomeArquivo(d.nome)"><i class="fas fa-download"></i></a>
           </td>
         </tr>
       </ng-template>
@@ -64,15 +64,16 @@
         </div>
 
         <div class="ui-g-6 ui-fluid">
-          <label>Vencimento*</label>
+          <label>Vencimento</label>
           <p-calendar name="vencimento" dateFormat="dd/mm/yy"
-                      [(ngModel)]="filtro.vencimento" required></p-calendar>
+                      [(ngModel)]="filtro.vencimento"></p-calendar>
         </div>
 
         <div class="ui-g-12">
-          <button pButton label="Filtrar" type="submit" style="margin-right: .25em"></button>
+          <button pButton label="Filtrar" type="submit" style="margin-right: .25em"
+                  [disabled]="f.invalid"></button>
           <button type="button" pButton label="Limpar" class="ui-button-secondary"
-                  (click)="f.reset()"></button>
+                  (click)="f.reset(); limparFiltro()"></button>
         </div>
       </form>
       <div class="ui-g-12">
@@ -87,14 +88,14 @@
           <ng-template pTemplate="body" let-d>
             <tr>
               <td class="notextcenter">{{d.cliente}}</td>
-              <td style="color: blue; width: 100px" >{{d.valor | number:'1.2-2'}}</td>
+              <td style="color: blue; width: 100px">{{d.valor | number:'1.2-2'}}</td>
               <td style="width: 120px">{{d.vencimento | date: 'dd/MM/yyyy'}}</td>
             </tr>
           </ng-template>
           <ng-template pTemplate="emptymessage">
             <tr>
               <td colspan="3" class="notextcenter">
-                Nenhum registro encontrado.
+                Nenhum lançamento inserido na remessa.
               </td>
             </tr>
           </ng-template>
@@ -102,7 +103,7 @@
       </div>
       <div class="ui-g-12">
         <button pButton type="button" label="Gerar Remessa" (click)="gerarRemessa()"
-                [disabled]="f.invalid"></button>
+                [(disabled)]="valor || f.invalid"></button>
       </div>
     </div>
   </ng-template>

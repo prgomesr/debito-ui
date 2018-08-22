@@ -32,6 +32,26 @@ export class LancamentoService extends ResourceService<Lancamento> {
       .get<any[]>(`${this.url}/${this.endpoint}`, {params});
   }
 
+  filterComPaginacao(filtro: Filtro): Observable<any> {
+    let params = new HttpParams();
+    params = params.set('size', filtro.itensPorPagina.toString());
+    params = params.set('page', filtro.pagina.toString());
+    if (filtro.convenio) {
+      params = params.set('convenio', filtro.convenio.id.toString());
+    }
+    if (filtro.vencimento) {
+      params = params.set('vencimento', moment(filtro.vencimento).format('YYYY-MM-DD'));
+    }
+    return this.http
+      .get<any[]>(`${this.url}/${this.endpoint}/paginacao`, {params}).map((data: any) => {
+        const result = {
+          registros: data.content,
+          total: data.totalElements
+        };
+        return result;
+      });
+  }
+
   lancamentoPorLote(filtro: Filtro, vencimento: Date): Observable<any> {
     let params = new HttpParams();
     if (filtro.convenio) {

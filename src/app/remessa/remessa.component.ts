@@ -21,6 +21,7 @@ export class RemessaComponent implements OnInit {
   convenios = [];
   filtro = new Filtro();
   modalRef: BsModalRef;
+  valor = true;
 
   constructor(private service: RemessaService,
               private lancamentoService: LancamentoService,
@@ -52,6 +53,7 @@ export class RemessaComponent implements OnInit {
     this.lancamentoService.filter(this.filtro).subscribe(dados => {
         this.spinner.hide();
         this.lancamentos = dados;
+        this.valor = false;
       },
       error => {
         this.errorHandler.handle(error);
@@ -74,7 +76,6 @@ export class RemessaComponent implements OnInit {
 
   openSearchModal(template: TemplateRef<any>) {
     this.modalRef = this.modalService.show(template, {class: 'modal-devllop'});
-    this.listarLancamentos();
     this.listarConvenios();
   }
 
@@ -105,6 +106,12 @@ export class RemessaComponent implements OnInit {
         this.errorHandler.handle(error);
         this.spinner.hide();
       });
+  }
+
+  limparFiltro() {
+    this.filtro = new Filtro();
+    this.lancamentos = [];
+    this.valor = true;
   }
 
   nomeArquivo(nome: string) {

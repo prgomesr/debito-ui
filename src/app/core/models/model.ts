@@ -47,6 +47,8 @@ export class Convenio extends Resource {
 export class Filtro {
   vencimento: Date;
   convenio: Convenio;
+  pagina = 0;
+  itensPorPagina = 15;
 }
 
 export class Remessa  extends Resource {
