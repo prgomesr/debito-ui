@@ -38,7 +38,8 @@
           <td>{{d.pagamento | date: 'dd/MM/yyyy'}}</td>
           <td>
             <span class="badge"
-                  [ngClass]="{'badge-warning': d.situacao === 'PENDENTE'}">
+                  [ngClass]="{'badge-warning': d.situacao === 'PENDENTE',
+                  'badge-success': d.situacao === 'PAGO'}">
               {{d.situacao}}
             </span>
           </td>
