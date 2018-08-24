@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpParams} from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {LancamentoSerializer} from './lancamento-serializer';
 import {Filtro, Lancamento} from '../core/models/model';
 import {Observable} from 'rxjs';
@@ -28,8 +28,12 @@ export class LancamentoService extends ResourceService<Lancamento> {
     if (filtro.vencimento) {
       params = params.set('vencimento', moment(filtro.vencimento).format('YYYY-MM-DD'));
     }
+    const headers = new HttpHeaders(
+      {
+        'Authorization': 'Basic YWRtaW46YWRtaW4='
+      });
     return this.http
-      .get<any[]>(`${this.url}/${this.endpoint}`, {params});
+      .get<any[]>(`${this.url}/${this.endpoint}`, {params, headers});
   }
 
   filterComPaginacao(filtro: Filtro): Observable<any> {
@@ -42,8 +46,12 @@ export class LancamentoService extends ResourceService<Lancamento> {
     if (filtro.vencimento) {
       params = params.set('vencimento', moment(filtro.vencimento).format('YYYY-MM-DD'));
     }
+    const headers = new HttpHeaders(
+      {
+        'Authorization': 'Basic YWRtaW46YWRtaW4='
+      });
     return this.http
-      .get<any[]>(`${this.url}/${this.endpoint}/paginacao`, {params}).map((data: any) => {
+      .get<any[]>(`${this.url}/${this.endpoint}/paginacao`, {params, headers}).map((data: any) => {
         const result = {
           registros: data.content,
           total: data.totalElements
@@ -63,14 +71,22 @@ export class LancamentoService extends ResourceService<Lancamento> {
     if (vencimento) {
       moment(vencimento).format('YYYY-MM-DD');
     }
+    const headers = new HttpHeaders(
+      {
+        'Authorization': 'Basic YWRtaW46YWRtaW4='
+      });
     return this.http
-      .post<any>(`${this.url}/${this.endpoint}/cadastrar-por-lote`, vencimento, {params});
+      .post<any>(`${this.url}/${this.endpoint}/cadastrar-por-lote`, vencimento, {params, headers});
   }
 
   baixarRemessa(id: number) {
+    const headers = new HttpHeaders(
+      {
+        'Authorization': 'Basic YWRtaW46YWRtaW4='
+      });
     return this.http
-      .get(`${this.url}/${this.endpoint}/${id}/pegar-remessa`, {responseType: 'blob'})
-      .map(res => this.downloadFile(res, 'application/txt', `${environment.nomeArquivoRemessa}.TXT`));
+      .get(`${this.url}/${this.endpoint}/${id}/pegar-remessa`, {responseType: 'blob', headers})
+      .map(res => this.downloadFile(res, 'text/plain', `${environment.nomeArquivoRemessa}.TXT`));
   }
 
   downloadFile(blob: any, type: string, filename: string): string {
@@ -96,7 +112,15 @@ export class LancamentoService extends ResourceService<Lancamento> {
     if (filtro.vencimento) {
       params = params.set('vencimento', moment(filtro.vencimento).format('YYYY-MM-DD'));
     }
+    const headers = new HttpHeaders(
+      {
+        'Authorization': 'Basic YWRtaW46YWRtaW4='
+      });
     return this.http
-      .get<any[]>(`${this.url}/${this.endpoint}/gerar-remessa`, {params});
+      .get<any[]>(`${this.url}/${this.endpoint}/gerar-remessa`, {params, headers});
+  }
+
+  urlUploadAnexo(id: number): string {
+    return `${this.url}/${this.endpoint}/anexo/${id}`;
   }
 }

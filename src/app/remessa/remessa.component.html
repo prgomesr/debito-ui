@@ -7,7 +7,10 @@
   <div class="ui-g-12">
     <a href="javascript:;" style="text-decoration: none; margin-left: .50em"
        pTooltip="Nova Remessa" tooltipPosition="right"
-       (click)="openSearchModal(searchModal)"><i class="fa fa-plus"></i> Novo</a>
+       (click)="openSearchModal(searchModal)"><i class="fas fa-plus"></i> Novo</a>
+    <a href="javascript:;" style="text-decoration: none; margin-left: .50em"
+       pTooltip="Tratar arquivo de retorno" tooltipPosition="right"
+       (click)="openUploadModal(uploadModal)"><i class="fas fa-file-upload"></i> Selecionar arquivo retorno</a>
     <p-table [value]="remessas" [paginator]="true" [rows]="5" [responsive]="true">
       <ng-template pTemplate="header">
         <tr>
@@ -105,6 +108,49 @@
         <button pButton type="button" label="Gerar Remessa" (click)="gerarRemessa()"
                 [(disabled)]="valor || f.invalid"></button>
       </div>
+    </div>
+  </ng-template>
+
+  <ng-template #uploadModal>
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Enviar arquivo de retorno</h4>
+      <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+
+      <form #uploadForm="ngForm" autocomplete="off">
+        <div class="ui-g">
+          <div class="ui-g-6 ui-fluid">
+            <p-dropdown [options]="convenios" placeholder="Selecione: " name="convenio"
+                        [(ngModel)]="convenioId" [autoWidth]="false" required></p-dropdown>
+          </div>
+          <div class="ui-g-6 ui-fluid"></div>
+
+          <div class="ui-g-3 ui-fluid">
+            <button pButton label="Limpar" (click)="uploadForm.reset()"
+                    class="ui-button-secondary"></button>
+          </div>
+
+          <div class="ui-g-12 ui-fluid">
+            <p-fileUpload name="anexo" maxFileSize="1000000"
+                          chooseLabel="Anexar" [url]="urlUploadAnexo"
+                          uploadLabel="Enviar"
+                          cancelLabel="Cancelar"
+                          (onBeforeSend)="antesUploadAnexo($event)"
+                          (onError)="erroDeUpload($event)"
+                          (onUpload)="aoTerminarUpload($event)"
+                          [hidden]="progressBar"
+                          [disabled]="uploadForm.invalid"></p-fileUpload>
+            <p-progressBar mode="indeterminate" [style]="{'height': '6px'}"
+                           [hidden]="!progressBar"></p-progressBar>
+            <p-message severity="info" text="Arquivo enviado com sucesso!"
+                       [hidden]="!arquivoEnviado"></p-message>
+          </div>
+        </div>
+      </form>
+
     </div>
   </ng-template>
 </div>

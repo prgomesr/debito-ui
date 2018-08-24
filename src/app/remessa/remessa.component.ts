@@ -2,7 +2,7 @@ import {Component, OnInit, TemplateRef} from '@angular/core';
 import {RemessaService} from './remessa.service';
 import {NgxSpinnerService} from 'ngx-spinner';
 import {LancamentoService} from '../lancamento/lancamento.service';
-import {Filtro} from '../core/models/model';
+import {Convenio, Filtro} from '../core/models/model';
 import {BsModalRef, BsModalService} from 'ngx-bootstrap';
 import {MessageService} from 'primeng/api';
 import {ConvenioService} from '../convenio/convenio.service';
@@ -19,9 +19,13 @@ export class RemessaComponent implements OnInit {
   remessas = [];
   lancamentos = [];
   convenios = [];
+  convenio = new Convenio();
   filtro = new Filtro();
   modalRef: BsModalRef;
   valor = true;
+  progressBar = false;
+  arquivoEnviado = false;
+  convenioId: number;
 
   constructor(private service: RemessaService,
               private lancamentoService: LancamentoService,
@@ -61,6 +65,19 @@ export class RemessaComponent implements OnInit {
       });
   }
 
+  listarConveniosValueId() {
+    this.spinner.show();
+    this.convenioService.list().subscribe(dados => {
+        this.spinner.hide();
+        this.convenios = dados
+          .map(d => ({label: d.numero, value: d.id}));
+      },
+      error => {
+        this.errorHandler.handle(error);
+        this.spinner.hide();
+      });
+  }
+
   listarConvenios() {
     this.spinner.show();
     this.convenioService.list().subscribe(dados => {
@@ -79,13 +96,21 @@ export class RemessaComponent implements OnInit {
     this.listarConvenios();
   }
 
+  openUploadModal(template: TemplateRef<any>) {
+    this.modalRef = this.modalService.show(template, {class: 'modal-devllop'});
+    this.listarConveniosValueId();
+    this.arquivoEnviado = false;
+    this.convenioId = null;
+  }
+
   baixar(id: number) {
     this.spinner.show();
     this.lancamentoService.baixarRemessa(id).subscribe(() => {
         this.spinner.hide();
-        setTimeout(() => {
-          this.listar();
-        }, 300);
+        this.listar();
+        // setTimeout(() => {
+        //   this.listar();
+        // }, 300);
       },
       error => {
         this.errorHandler.handle(error);
@@ -116,6 +141,30 @@ export class RemessaComponent implements OnInit {
 
   nomeArquivo(nome: string) {
     environment.nomeArquivoRemessa = nome;
+  }
+
+  antesUploadAnexo(event) {
+    event.xhr.setRequestHeader('Authorization', 'Basic YWRtaW46YWRtaW4=');
+    this.progressBar = true;
+    this.arquivoEnviado = false;
+  }
+
+  erroDeUpload(event) {
+    this.progressBar = false;
+    this.arquivoEnviado = false;
+    this.toasty.add({
+      severity: 'error', summary: 'Erro!',
+      detail: 'Erro ao tentar enviar o arquivo. Tente novamente!', life: 7000
+    });
+  }
+
+  aoTerminarUpload(event) {
+    this.progressBar = false;
+    this.arquivoEnviado = true;
+  }
+
+  get urlUploadAnexo() {
+    return this.lancamentoService.urlUploadAnexo(this.convenioId);
   }
 
 }

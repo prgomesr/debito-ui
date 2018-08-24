@@ -10,6 +10,9 @@ import {DialogModule} from 'primeng/dialog';
 import {DropdownModule} from 'primeng/dropdown';
 import {CalendarModule} from 'primeng/calendar';
 import {InputTextModule} from 'primeng/inputtext';
+import {FileUploadModule} from 'primeng/fileupload';
+import {ProgressBarModule} from 'primeng/progressbar';
+import {MessageModule} from 'primeng/message';
 
 import { CurrencyMaskModule } from 'ng2-currency-mask';
 
@@ -24,6 +27,6 @@ import { ModalModule } from 'ngx-bootstrap/modal';
   ],
   declarations: [],
   exports: [TableModule, ButtonModule, TooltipModule, DialogModule, FormsModule, DropdownModule, CurrencyMaskModule,
-  CalendarModule, InputTextModule, ModalModule]
+  CalendarModule, InputTextModule, ModalModule, FileUploadModule, ProgressBarModule, MessageModule]
 })
 export class SharedModule { }
