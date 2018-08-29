@@ -1,0 +1,90 @@
+<div class="ui g">
+
+  <div class="ui-g-12">
+    <h1>Relatórios</h1>
+  </div>
+
+  <div class="ui-g-12">
+    <a href="javascript:;" (click)="openLancamentoRecebidoModal(formRelatorioRecebido)">Lançamentos Recebidos</a>
+  </div>
+  <div class="ui-g-12">
+    <a href="javascript:;" (click)="openLancamentoNaoRecebidoModal(formRelatorioNaoRecebido)">Lançamentos Não Recebidos</a>
+  </div>
+
+</div>
+
+<ng-template #formRelatorioRecebido>
+  <div class="modal-header">
+    <h4>Relatório de Recebimento Por Período</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form #f="ngForm" (ngSubmit)="gerarRelatorioRecebido(f)" autocomplete="off">
+
+      <div class="ui-g-6 ui-fluid">
+        <label>Convênio*</label>
+        <p-dropdown [options]="convenios" name="convenio" placeholder="Selecione: "
+                    [(ngModel)]="convenioId" [autoWidth]="false" required></p-dropdown>
+      </div>
+
+      <div class="ui-g-12">
+        <label>Vencimento*</label>
+      </div>
+      <div class="ui-g-12" style="margin-top: -15px">
+        <p-calendar name="vencimentoDe" dateFormat="dd/mm/yy" [inputStyle]="{'width': '95px'}"
+                    [(ngModel)]="periodoInicio" required></p-calendar>
+
+        <label style="margin-right: 5px; margin-left: 5px">até</label>
+
+        <p-calendar name="vencimentoAte" dateFormat="dd/mm/yy" [inputStyle]="{'width': '95px'}"
+                    [(ngModel)]="periodoFim" required></p-calendar>
+      </div>
+
+
+      <div class="ui-g-12">
+        <button pButton label="Gerar" type="submit" style="margin-right: .25em"
+                [disabled]="f.invalid || f.pristine"></button>
+      </div>
+    </form>
+  </div>
+</ng-template>
+
+<ng-template #formRelatorioNaoRecebido>
+  <div class="modal-header">
+    <h4>Relatório de Não Recebimento Por Período</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form #f="ngForm" (ngSubmit)="gerarRelatorioNaoRecebido(f)" autocomplete="off">
+
+      <div class="ui-g-6 ui-fluid">
+        <label>Convênio*</label>
+        <p-dropdown [options]="convenios" name="convenio" placeholder="Selecione: "
+                    [(ngModel)]="convenioId" [autoWidth]="false" required></p-dropdown>
+      </div>
+
+      <div class="ui-g-12">
+        <label>Vencimento*</label>
+      </div>
+      <div class="ui-g-12" style="margin-top: -15px">
+        <p-calendar name="vencimentoDe" dateFormat="dd/mm/yy" [inputStyle]="{'width': '95px'}"
+                    [(ngModel)]="periodoInicio" required></p-calendar>
+
+        <label style="margin-right: 5px; margin-left: 5px">até</label>
+
+        <p-calendar name="vencimentoAte" dateFormat="dd/mm/yy" [inputStyle]="{'width': '95px'}"
+                    [(ngModel)]="periodoFim" required></p-calendar>
+      </div>
+
+
+      <div class="ui-g-12">
+        <button pButton label="Gerar" type="submit" style="margin-right: .25em"
+                [disabled]="f.invalid || f.pristine"></button>
+      </div>
+    </form>
+  </div>
+</ng-template>

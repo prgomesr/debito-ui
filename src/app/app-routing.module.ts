@@ -8,6 +8,7 @@ const routes: Routes = [
   {path: 'convenios', loadChildren: './convenio/convenio.module#ConvenioModule'},
   {path: 'contas', loadChildren: './conta/conta.module#ContaModule'},
   {path: 'remessas', loadChildren: './remessa/remessa.module#RemessaModule'},
+  {path: 'relatorios', loadChildren: './relatorios/relatorios.module#RelatoriosModule'},
   {path: '**', redirectTo: 'pagina-nao-encontrada'},
   {path: '', redirectTo: 'dashboard', pathMatch: 'full'}
 ];

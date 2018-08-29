@@ -89,6 +89,34 @@ export class LancamentoService extends ResourceService<Lancamento> {
       .map(res => this.downloadFile(res, 'text/plain', `${environment.nomeArquivoRemessa}.TXT`));
   }
 
+  relatorioRecebidosPorCliente(nome: string, inicio: Date, fim: Date, convenio: number) {
+    const headers = new HttpHeaders(
+      {
+        'Authorization': 'Basic YWRtaW46YWRtaW4='
+      });
+    let params = new HttpParams();
+    params = params.set('vencimentoDe', moment(inicio).format('YYYY-MM-DD'));
+    params = params.set('vencimentoAte', moment(fim).format('YYYY-MM-DD'));
+    params = params.set('convenio', convenio.toString());
+    return this.http
+      .get(`${this.url}/${this.endpoint}/relatorios/recebido`, {responseType: 'blob', headers, params})
+      .map(res => this.downloadFile(res, 'application/pdf', `${nome}`));
+  }
+
+  relatorioNaoRecebidosPorCliente(nome: string, inicio: Date, fim: Date, convenio: number) {
+    const headers = new HttpHeaders(
+      {
+        'Authorization': 'Basic YWRtaW46YWRtaW4='
+      });
+    let params = new HttpParams();
+    params = params.set('vencimentoDe', moment(inicio).format('YYYY-MM-DD'));
+    params = params.set('vencimentoAte', moment(fim).format('YYYY-MM-DD'));
+    params = params.set('convenio', convenio.toString());
+    return this.http
+      .get(`${this.url}/${this.endpoint}/relatorios/nao-recebido`, {responseType: 'blob', headers, params})
+      .map(res => this.downloadFile(res, 'application/pdf', `${nome}`));
+  }
+
   downloadFile(blob: any, type: string, filename: string): string {
     const url = window.URL.createObjectURL(blob); // <-- work with blob directly
 
